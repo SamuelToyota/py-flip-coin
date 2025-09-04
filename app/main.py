@@ -1,7 +1,6 @@
 import random
 from collections import Counter
 
-
 def flip_coin(trials=10000, flips=10):
     results = []
 
@@ -14,6 +13,5 @@ def flip_coin(trials=10000, flips=10):
 
     return percentages
 
-
-# Example usage
+# Exemplo de uso
 print(flip_coin())
