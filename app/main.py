@@ -11,11 +11,11 @@ def flip_coin(num_trials: int = 10000, num_flips: int = 10) -> Dict[int, float]:
     results = {i: 0 for i in range(num_flips + 1)}
 
     for _ in range(num_trials):
-        # escreva seu código aqui
+        # Conta quantas caras em 'num_flips' lançamentos
         caras = sum(random.choice([0, 1]) for _ in range(num_flips))
         results[caras] += 1
 
-    # converte contagens em porcentagem
+    # Converte contagens em porcentagem
     results_percent = {
         k: (v / num_trials) * 100
         for k, v in results.items()
@@ -30,7 +30,6 @@ def draw_gaussian_distribution_graph(distribution: Dict[int, float]) -> None:
     keys = list(distribution.keys())
     values = list(distribution.values())
 
-    # escreva seu código aqui
     plt.bar(keys, values, color="skyblue", edgecolor="black")
     plt.xlabel("Número de caras")
     plt.ylabel("Porcentagem (%)")
@@ -43,7 +42,6 @@ def draw_gaussian_distribution_graph(distribution: Dict[int, float]) -> None:
 
 
 # Exemplo de uso
-# escreva seu código aqui
 dist = flip_coin()
 print(dist)
 draw_gaussian_distribution_graph(dist)
