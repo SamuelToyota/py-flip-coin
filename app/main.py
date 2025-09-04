@@ -1,47 +1,52 @@
 import random
 import matplotlib.pyplot as plt
+from math import comb
 from typing import Dict
 
 
-def flip_coin(num_trials: int = 10000, num_flips: int = 10) -> Dict[int, float]:
+def simulate_coin_flips(num_flips: int = 10, num_trials: int = 10000) -> Dict[int, float]:
     """
-    Simula 'num_trials' jogadas de uma moeda 'num_flips' vezes.
-    Retorna um dicionário com a frequência percentual de cada número de caras.
+    Simula 'num_trials' sequências de 'num_flips' lançamentos de moeda.
+    Retorna um dicionário onde as chaves são o número de caras (0 a num_flips)
+    e os valores são as porcentagens de ocorrência.
     """
-    results = {i: 0 for i in range(num_flips + 1)}
+    counts = {i: 0 for i in range(num_flips + 1)}
 
     for _ in range(num_trials):
-        # Conta quantas caras em 'num_flips' lançamentos
-        caras = sum(random.choice([0, 1]) for _ in range(num_flips))
-        results[caras] += 1
+        heads = sum(random.choices([0, 1], k=num_flips))
+        counts[heads] += 1
 
-    # Converte contagens em porcentagem
-    results_percent = {
-        k: (v / num_trials) * 100
-        for k, v in results.items()
-    }
-    return results_percent
+    return {k: (v / num_trials) * 100 for k, v in counts.items()}
 
 
-def draw_gaussian_distribution_graph(distribution: Dict[int, float]) -> None:
+def theoretical_binomial_distribution(num_flips: int = 10) -> Dict[int, float]:
     """
-    Desenha um gráfico de barras da distribuição de caras.
+    Calcula a distribuição binomial teórica para 'num_flips' lançamentos de moeda justa.
     """
-    keys = list(distribution.keys())
-    values = list(distribution.values())
+    return {k: comb(num_flips, k) * (0.5 ** num_flips) * 100 for k in range(num_flips + 1)}
 
-    plt.bar(keys, values, color="skyblue", edgecolor="black")
+
+def plot_coin_distribution(simulated: Dict[int, float], theoretical: Dict[int, float]) -> None:
+    """
+    Plota a distribuição simulada como barras e a distribuição teórica como linha.
+    """
+    keys = list(simulated.keys())
+    simulated_values = list(simulated.values())
+    theoretical_values = [theoretical[k] for k in keys]
+
+    plt.bar(keys, simulated_values, color="skyblue", edgecolor="black", label="Simulação")
+    plt.plot(keys, theoretical_values, color="red", marker='o', linestyle='-', linewidth=2, label="Teórica")
+
     plt.xlabel("Número de caras")
     plt.ylabel("Porcentagem (%)")
-    plt.title(
-        "Distribuição de caras em 10 lançamentos de moeda"
-    )
+    plt.title("Distribuição de caras em 10 lançamentos de moeda")
     plt.xticks(keys)
     plt.grid(axis="y", linestyle="--", alpha=0.7)
+    plt.legend()
     plt.show()
 
 
-# Exemplo de uso
-dist = flip_coin()
-print(dist)
-draw_gaussian_distribution_graph(dist)
+# --- Execução ---
+simulated = simulate_coin_flips()
+theoretical = theoretical_binomial_distribution()
+plot_coin_distribution(simulated, theoretical)
